@@ -25,7 +25,7 @@ public class DatabaseTableToCSVTests {
     public void testMySQLConvert() throws SQLException, IOException {
 
         DatabaseTableToCSV converter = new DatabaseTableToCSV(mysqlUrl,
-                "MYSQL",
+                SupportedDatabase.MYSQL,
                 mysqlUser,
                 mysqlPsw);
         try {
@@ -40,7 +40,7 @@ public class DatabaseTableToCSVTests {
     public void testSqlServerConvert() throws SQLException, IOException {
 
         DatabaseTableToCSV converter = new DatabaseTableToCSV(mssserverUrl,
-                "SqlServer",
+                SupportedDatabase.SQL_SQLSERVER,
                 mssserverUsr,
                 mssserverPsw);
         try {
@@ -55,7 +55,7 @@ public class DatabaseTableToCSVTests {
     public void testPGConvert() throws SQLException, IOException {
 
         DatabaseTableToCSV converter = new DatabaseTableToCSV(postgresUrl,
-                "POSTGRESQL",
+                SupportedDatabase.POSTGRESQL,
                 pgUsr,
                 pgPsw);
         try {

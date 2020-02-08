@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
 
-public class DatabaseTableToCSV {
-    private static final int BUFFER_SIZE = 1000;
+import static tech.comfortheart.util.SupportedDatabase.*;
 
-    public enum DatabaseType { MYSQL, ORACLE, SQLSERVER, POSTGRESQL}
+public class DatabaseTableToCSV {
+
+
+    private static final int BUFFER_SIZE = 1000;
 
     private DatabaseType databaseType;
 
@@ -26,16 +28,16 @@ public class DatabaseTableToCSV {
         info.put("user", username);
         info.put("password", password);
         Driver driver;
-        if (dbType.trim().toUpperCase().equals("MYSQL")) {
+        if (dbType.trim().toUpperCase().equals(MYSQL)) {
             driver = new com.mysql.cj.jdbc.Driver();
             databaseType = DatabaseType.MYSQL;
-        } else if (dbType.trim().toUpperCase().equals("ORACLE")) {
+        } else if (dbType.trim().toUpperCase().equals(ORACLE)) {
             driver = new oracle.jdbc.OracleDriver();
             databaseType = DatabaseType.ORACLE;
-        } else if (dbType.trim().toUpperCase().equals("SQLSERVER")) {
+        } else if (dbType.trim().toUpperCase().equals(SQL_SQLSERVER)) {
             driver = new com.microsoft.sqlserver.jdbc.SQLServerDriver();
             databaseType = DatabaseType.SQLSERVER;
-        } else if (dbType.trim().toUpperCase().equals("POSTGRESQL")) {
+        } else if (dbType.trim().toUpperCase().equals(POSTGRESQL)) {
             driver = new org.postgresql.Driver();
             databaseType = DatabaseType.POSTGRESQL;
         } else {
