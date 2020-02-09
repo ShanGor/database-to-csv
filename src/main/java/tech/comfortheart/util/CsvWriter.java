@@ -83,7 +83,7 @@ public class CsvWriter {
             String[] rowData = new String[columnCount];
             for(int i=1; i<=columnCount; i++) {
                 int type = metaData.getColumnType(i);
-                String columnValue;
+                String columnValue = "";
                 switch (type) {
                     case Types.FLOAT:
                     case Types.INTEGER:
@@ -101,7 +101,10 @@ public class CsvWriter {
                         columnValue = rs.getDate(i).toString();
                         break;
                     default:
-                        columnValue = rs.getObject(i).toString();
+                        Object o = rs.getObject(i);
+                        if (o!=null) {
+                            columnValue = o.toString();
+                        }
                         break;
                 }
                 rowData[i-1] = columnValue;

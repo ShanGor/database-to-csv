@@ -6,17 +6,24 @@ import com.microsoft.sqlserver.jdbc.SQLServerResultSet;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import static tech.comfortheart.util.SupportedDatabase.*;
 
-public class DatabaseTableToCSV {
-
+public class DatabaseTableToCSV implements AutoCloseable {
+    static final Logger logger = Logger.getLogger(DatabaseTableToCSV.class.getSimpleName());
 
     private static final int BUFFER_SIZE = 1000;
 
     private DatabaseType databaseType;
 
     private Connection dbConn;
+
+    private DatabaseTableToCSV(){}
+
+    public DatabaseTableToCSV(DatabaseConfig config) throws SQLException {
+        this(config.getJdbcUrl(), config.getDatabaseType(), config.getUsername(), config.getPassword());
+    }
 
     public DatabaseTableToCSV(String jdbcUrl,
                               String dbType,
@@ -28,6 +35,7 @@ public class DatabaseTableToCSV {
         info.put("user", username);
         info.put("password", password);
         Driver driver;
+        logger.info("Loading driver of " + dbType);
         if (dbType.trim().toUpperCase().equals(MYSQL)) {
             driver = new com.mysql.cj.jdbc.Driver();
             databaseType = DatabaseType.MYSQL;
@@ -43,7 +51,10 @@ public class DatabaseTableToCSV {
         } else {
             throw new SQLException("The Database is not supported: " + dbType);
         }
+        logger.info("Driver loaded!");
+        logger.info("Trying to connect to Database..");
         dbConn = driver.connect(jdbcUrl, info);
+        logger.info("Database connected!");
         dbConn.setReadOnly(true);
 
         /**
@@ -98,6 +109,7 @@ public class DatabaseTableToCSV {
             /**
              * For MySQL, only this way can force the driver to fetch in stream. Do NOT change the fetch size to other values.
              */
+
             statement = dbConn.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             statement.setFetchSize(Integer.MIN_VALUE);
             statement.setFetchDirection(ResultSet.FETCH_FORWARD);
@@ -131,9 +143,11 @@ public class DatabaseTableToCSV {
     /**
      * Must call this in finally{}
      */
+    @Override
     public void close() {
         try {
             dbConn.close();
+            logger.info("DB connection closed!");
         } catch (SQLException e) {
 
         }
