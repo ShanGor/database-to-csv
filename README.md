@@ -24,3 +24,12 @@ The mission of this project, is to create a generic solution to extract database
         }
     }
 ```
+
+#### Encryption
+```
+# Generate the keystore with self-signed keypair.
+keytool -genkeypair -alias E2E_Alias -sigalg SHA256withRSA -keystore demo.jks -storetype PKCS12 -keysize 2048 -keyalg RSA -dname "CN=Consumer,OU=TechDept,O=Comfortheart.tech,L=GZ,ST=GD,C=China" -storepass changeit -keypass changeit
+
+# Export the public key.
+keytool -exportcert -keystore demo.jks -file demo.cer -alias E2E_Alias -storepass changeit -keypass changeit
+```

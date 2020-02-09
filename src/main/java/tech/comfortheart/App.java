@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 /**
- * Hello world!
+ * App to extract tables from a database to be csv files, store to a folder.
  *
  */
 public class App {
