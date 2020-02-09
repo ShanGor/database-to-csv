@@ -1,14 +1,15 @@
 package tech.comfortheart.util;
 
-import java.text.SimpleDateFormat;
+import tech.comfortheart.App;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class DatabaseConfig {
+    private static final Logger logger = Logger.getLogger(DatabaseConfig.class.getSimpleName());
     private String jdbcUrl;
     private String username;
     private String password;
@@ -89,7 +90,23 @@ public class DatabaseConfig {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        String tmp = password;
+        if (password.startsWith("{cipher}")) {
+            logger.info("Password is encrypted, now trying to decrypt it..");
+            tmp = password.substring("{cipher}".length());
+            try {
+                App.KeystoreAndCert keystoreAndCert = App.getKeystoreAndCert();
+                tmp = EncryptUtil.decrypt(keystoreAndCert.getKeystorePath(), App.ALIAS_NAME, keystoreAndCert.getPassword(), keystoreAndCert.getPassword(), tmp);
+
+                logger.info("Password decrypted successfully!");
+            } catch (Exception e) {
+                logger.info("FATAL ERROR: Password decrypt failed!");
+                throw new RuntimeException(e);
+            }
+        } else {
+            logger.warning("Your password is stored in plain text, which is not save! Please try to encrypt it!");
+        }
+        this.password = tmp;
     }
 
     public String getDatabaseType() {

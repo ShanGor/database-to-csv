@@ -2,6 +2,9 @@ package tech.comfortheart.util;
 
 import org.junit.Test;
 
+
+import static org.junit.Assert.assertEquals;
+
 public class EncryptUtilTests {
     @Test
     public void testEncrypt() throws Exception {
@@ -18,5 +21,39 @@ public class EncryptUtilTests {
                 "changeit",
                 "changeit", encrypted);
         assert decrypted.equals("Are you okay");
+    }
+
+    @Test
+    public void testGenerateKeystore() {
+        try {
+            String password = EncryptUtil.generateKeystore("comfortheart.tech",
+                    "main",
+                    "comfortheart",
+                    "gz",
+                    "gd",
+                    "CN",
+                    2048,
+                    730,
+                    "test",
+                    "/tmp/test.jks",
+                    "/tmp/test.cer");
+
+            String encrypted = EncryptUtil.encrypt("/tmp/test.cer", "Are you okay");
+
+            String decrypted = EncryptUtil.decrypt("/tmp/test.jks",
+                    "test",
+                    password,
+                    password, encrypted);
+            assertEquals(decrypted, "Are you okay");
+            System.out.println("Tested the decryption and encryption successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testGenerateRandomPassword() {
+        String str = EncryptUtil.generateRandomPassword(10);
+        System.out.println(str);
     }
 }
