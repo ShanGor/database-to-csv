@@ -167,7 +167,14 @@ public class DatabaseConfig {
 
     public static final String massageVariables(final String source) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        LocalDate date = LocalDate.now();
+        String businessDate = System.getProperty("businessDate");
+        LocalDate date;
+        if (notEmpty(businessDate)) {
+            date = LocalDate.parse(businessDate, formatter);
+            logger.info("Using business date " + date.toString() + " as today!");
+        } else {
+            date = LocalDate.now();
+        }
 
         String target = source;
 

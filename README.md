@@ -29,6 +29,10 @@ The mission of this project, is to create a generic solution to extract database
   - Run/Schedule the program:  
     `java -jar xxx.jar /home/wasadm/config.xlsx`
 
+> To define a "today" in testing environment
+```
+java -DbusinessDate=20200205 -jar xxx.jar /home/wasadm/config.xlsx 
+```
 
 ### Details core logic please ref to the test cases
 ```
