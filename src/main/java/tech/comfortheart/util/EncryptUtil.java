@@ -68,7 +68,7 @@ public class EncryptUtil {
                                        final String storePassword,
                                        final String keyPassword,
                                        final String encryptedBase64Str) throws Exception {
-        PrivateKey key = readPrivateKey(keystorePath, alias, storePassword, keyPassword);
+        PrivateKey key = readPrivateKey(keystorePath, storePassword, keyPassword, alias);
         Cipher cipher = Cipher.getInstance(PADDING);
         cipher.init(Cipher.DECRYPT_MODE, key);
         return new String(cipher.doFinal(Base64.getDecoder().decode(encryptedBase64Str)));

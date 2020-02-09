@@ -5,18 +5,18 @@ import org.junit.Test;
 public class EncryptUtilTests {
     @Test
     public void testEncrypt() throws Exception {
-        String encrypted = EncryptUtil.encrypt("/Users/sam/git/java/database-to-csv/src/main/resources/demo.cer", "Are you okay");
+        String encrypted = EncryptUtil.encrypt("/Users/sam/git/java/database-to-csv/src/test/resources/demo.cer", "Are you okay");
         System.out.println(encrypted);
     }
 
     @Test
     public void testDecrypt() throws Exception {
-        String encrypted = "BhBDy9LDwT2/G6co6E0kMzvKAKMeWEngB58ztRG/OjRKBn29gelJvNZOG69AcNI6Iyf6318kAOD/drY/RdNMVRK3SfR3pVf8UCHvRwji0S3/O++ziT1e8xPbXT68JgO+0T1DrSIXUdhxOHxhx+3Klta/wtGaiPQ3+XQrLW0EH3rRv8vbZy0a1Fr1PG7sSz9YVZWQffncUeCHIXH525pD83r3+MLlqUS2pAJXR5Qy1hfHaHmlH4l/on/JB/J5IjGyl7WpwCJXOJKuQKGRVS7YHljLSw9CC87oqahbXmZk7kmyKq3nFwFQPTtYm/sMj14EgPOh/RWE17k/g4+aM1yUiA==";
+        String encrypted = "adjYtGwFk1S4KQTYiNTUHD0qLJWMzfjLFthGljTnMYf2lMHMVbBzBtms4GjKjkSMDky1fG/si2ZpGQJaxvGyr766asrGOo4NJ6JxQMbK0YJRmEb6hK8eOYk82Bzff7ItO5wYD9ErH/x29gq0sjoxQc9pLIK4kTiVvtkqEp5kqI2Jc6vgnphkIS0JuoKRQYg+IXgK6x0VniReMDXr29jRjPQjyBoFkHfSYpLO5VPHlqeITb2bq/+g0cnwSXv+Hr8aB8NlBFFTLTJMbe1wZjPAHh4BPm/AZsFtz0aZk8tmdwJHgeazOMu1rVNwt39Ls2s7jng5+iVy4sG0T1PwPiXpew==";
 
-        String decrypted = EncryptUtil.decrypt("/Users/sam/git/java/database-to-csv/src/main/resources/demo.jks",
+        String decrypted = EncryptUtil.decrypt("/Users/sam/git/java/database-to-csv/src/test/resources/demo.jks",
                 "E2E_Alias",
                 "changeit",
                 "changeit", encrypted);
-        System.out.println(decrypted);
+        assert decrypted.equals("Are you okay");
     }
 }
