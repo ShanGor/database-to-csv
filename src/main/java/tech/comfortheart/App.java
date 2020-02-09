@@ -10,6 +10,7 @@ import tech.comfortheart.util.DatabaseTableToCSV;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
@@ -22,8 +23,7 @@ public class App {
     private static Logger logger = Logger.getLogger(App.class.getSimpleName());
     private static final int PROCESS_THREADS = 10;
 
-    public static void main( String[] args )
-    {
+    public static void main( String[] args ) {
         if (args.length != 1) {
             String path = App.class.getResource(App.class.getSimpleName() + ".class").getFile();
             if (path.startsWith("file:/")) {
@@ -44,6 +44,7 @@ public class App {
     }
 
     public static void process(File configFile) {
+        long startTime = System.currentTimeMillis();
         try (Workbook wb = WorkbookFactory.create(configFile)){
             Sheet sheet = wb.getSheet("config");
             DatabaseConfig config = new DatabaseConfig();
@@ -61,8 +62,11 @@ public class App {
 
             ExecutorService executorService = Executors.newFixedThreadPool(PROCESS_THREADS);
 
+            CountDownLatch latch = new CountDownLatch(config.getTables().size());
+
             for(DatabaseConfig.Table table : config.getTables()) {
                 executorService.execute(() -> {
+                    logger.info("== Starting to extract table: " + table.getTableName());
                     try(DatabaseTableToCSV databaseTableToCSV = new DatabaseTableToCSV(config)) {
 
                         File path = new File(config.getCsvLocation());
@@ -76,13 +80,22 @@ public class App {
                         } else {
                             databaseTableToCSV.convertTable(table.getTableName(), csvFile.getAbsolutePath());
                         }
+                        logger.info("== table " + table.getTableName() + " is extracted successfully!");
                     } catch (SQLException|IOException e) {
-                        e.printStackTrace();
+                        logger.info("FATAL ERROR: table " + table.getTableName() + " failed to extract due to " + e.getMessage());
+                    } finally {
+                        latch.countDown();
                     }
                 });
             }
 
-        } catch (IOException e) {
+            latch.await();
+
+            long endTime = System.currentTimeMillis();
+            executorService.shutdown();
+            logger.info("Mission completed in " + (endTime - startTime)/1000.0 + " seconds, please check log for failed/successful cases!");
+
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
