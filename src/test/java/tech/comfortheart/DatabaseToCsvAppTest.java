@@ -50,7 +50,7 @@ public class DatabaseToCsvAppTest
         String folderPath = "/tmp/fhdipafdkja324324sfldsh";
         System.setProperty("user.home", folderPath);
         File folder = new File(folderPath);
-        folder.mkdir();
+        folder.mkdirs();
 
         StringBuilder sb = new StringBuilder();
         sb.append("myCommonName").append("\r")
@@ -68,8 +68,8 @@ public class DatabaseToCsvAppTest
 
         String keystorePath = DatabaseToCsvApp.getKeystoreAndCert().getKeystorePath();
         String certPath = DatabaseToCsvApp.getKeystoreAndCert().getCertPath();
-        assertEquals("/tmp/fhdipafdkja324324sfldsh/hey/db2csv.jks", keystorePath);
-        assert certPath.equals("/tmp/fhdipafdkja324324sfldsh/hey/db2csv.cer");
+        assertEquals(new File("/tmp/fhdipafdkja324324sfldsh/hey/db2csv.jks").getAbsolutePath(), keystorePath);
+        assert certPath.equals(new File("/tmp/fhdipafdkja324324sfldsh/hey/db2csv.cer").getAbsolutePath());
         String password = DatabaseToCsvApp.getKeystoreAndCert().getPassword();
         assertEquals(password, new KeystorePasswordUtil(new File(folder, "hey")).retrieveKeystorePassword());
 
