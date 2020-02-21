@@ -3,12 +3,15 @@ package tech.comfortheart.util;
 import org.junit.Test;
 
 
+import java.io.File;
+
 import static org.junit.Assert.assertEquals;
 
 public class EncryptUtilTest {
     @Test
     public void testEncrypt() throws Exception {
-        String encrypted = EncryptUtil.encrypt("/Users/sam/git/java/database-to-csv/src/test/resources/demo.cer", "Are you okay");
+        String certPath = new File(this.getClass().getClassLoader().getResource("demo.cer").getFile()).getAbsolutePath();
+        String encrypted = EncryptUtil.encrypt(certPath, "Are you okay");
         System.out.println(encrypted);
         new EncryptUtil();
     }
@@ -16,8 +19,9 @@ public class EncryptUtilTest {
     @Test
     public void testDecrypt() throws Exception {
         String encrypted = "adjYtGwFk1S4KQTYiNTUHD0qLJWMzfjLFthGljTnMYf2lMHMVbBzBtms4GjKjkSMDky1fG/si2ZpGQJaxvGyr766asrGOo4NJ6JxQMbK0YJRmEb6hK8eOYk82Bzff7ItO5wYD9ErH/x29gq0sjoxQc9pLIK4kTiVvtkqEp5kqI2Jc6vgnphkIS0JuoKRQYg+IXgK6x0VniReMDXr29jRjPQjyBoFkHfSYpLO5VPHlqeITb2bq/+g0cnwSXv+Hr8aB8NlBFFTLTJMbe1wZjPAHh4BPm/AZsFtz0aZk8tmdwJHgeazOMu1rVNwt39Ls2s7jng5+iVy4sG0T1PwPiXpew==";
+        String keystorePath = new File(this.getClass().getClassLoader().getResource("demo.jks").getFile()).getAbsolutePath();
 
-        String decrypted = EncryptUtil.decrypt("/Users/sam/git/java/database-to-csv/src/test/resources/demo.jks",
+        String decrypted = EncryptUtil.decrypt(keystorePath,
                 "E2E_Alias",
                 "changeit",
                 "changeit", encrypted);
