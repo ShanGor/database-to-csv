@@ -14,8 +14,8 @@ public class DatabaseConfigTest {
         config.setVariable("DB_TYPE", "MYSQL");
         config.setVariable("CSV_LOCATION", "dont tell you");
         config.setVariable("TABLES", "you, okay");
-        assertEquals("okay", config.getTables().get(1));
-        assertEquals("you", config.getTables().get(0));
+        assertEquals("okay", config.getTables().get(1).getTableName());
+        assertEquals("you", config.getTables().get(0).getTableName());
         assertEquals("myJdbc", config.getJdbcUrl());
         assertEquals("myUser", config.getUsername());
         assertEquals("my password", config.getPassword());
