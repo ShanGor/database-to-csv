@@ -1,13 +1,11 @@
 package tech.comfortheart.util;
 
-import org.junit.Test;
-
 import java.io.IOException;
 import java.sql.*;
 import java.util.logging.Logger;
 
-public class DatabaseTableToCSVTests {
-    Logger logger = Logger.getLogger(DatabaseTableToCSVTests.class.getSimpleName());
+public class DatabaseTableToCSVTest {
+    Logger logger = Logger.getLogger(DatabaseTableToCSVTest.class.getSimpleName());
 
     String mysqlUrl = "jdbc:mysql://localhost:3306/test";
     String mysqlUser = "test";
@@ -36,7 +34,7 @@ public class DatabaseTableToCSVTests {
         }
     }
 
-    @Test
+//    @Test
     public void testSqlServerConvert() throws SQLException, IOException {
 
         DatabaseTableToCSV converter = new DatabaseTableToCSV(mssserverUrl,
@@ -90,7 +88,7 @@ public class DatabaseTableToCSVTests {
 
     }
 
-    @Test
+//    @Test
     public void initSqlServerData() {
         String driver = com.microsoft.sqlserver.jdbc.SQLServerDriver.class.getName();
 

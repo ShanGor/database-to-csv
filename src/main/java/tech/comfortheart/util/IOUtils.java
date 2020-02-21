@@ -18,16 +18,33 @@ public class IOUtils {
     }
 
     /**
-     * Read String from STDIN.
-     * @param prompt
-     * @return
-     * @throws IOException
+     * Utility class to read things from STDIO
      */
-    public static String readStandardInput(String prompt) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    public static class Stdin implements Closeable{
+        private BufferedReader in;
+        public Stdin() {
+            in = new BufferedReader(new InputStreamReader(System.in));
+        }
 
-        System.out.print(prompt);
-        System.out.flush();
-        return in.readLine();
+        public String readLine() throws IOException {
+            return in.readLine();
+        }
+
+        /**
+         * Prompt a string, then read the input.
+         * @param prompt
+         * @return
+         * @throws IOException
+         */
+        public String readLine(String prompt) throws IOException {
+            System.out.print(prompt);
+            System.out.flush();
+            return readLine();
+        }
+
+        @Override
+        public void close() throws IOException {
+            in.close();
+        }
     }
 }

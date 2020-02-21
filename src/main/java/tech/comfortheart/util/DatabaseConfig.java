@@ -1,6 +1,6 @@
 package tech.comfortheart.util;
 
-import tech.comfortheart.App;
+import tech.comfortheart.DatabaseToCsvApp;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -95,8 +95,8 @@ public class DatabaseConfig {
             logger.info("Password is encrypted, now trying to decrypt it..");
             tmp = password.substring("{cipher}".length());
             try {
-                App.KeystoreAndCert keystoreAndCert = App.getKeystoreAndCert();
-                tmp = EncryptUtil.decrypt(keystoreAndCert.getKeystorePath(), App.ALIAS_NAME, keystoreAndCert.getPassword(), keystoreAndCert.getPassword(), tmp);
+                DatabaseToCsvApp.KeystoreAndCert keystoreAndCert = DatabaseToCsvApp.getKeystoreAndCert();
+                tmp = EncryptUtil.decrypt(keystoreAndCert.getKeystorePath(), DatabaseToCsvApp.ALIAS_NAME, keystoreAndCert.getPassword(), keystoreAndCert.getPassword(), tmp);
 
                 logger.info("Password decrypted successfully!");
             } catch (Exception e) {

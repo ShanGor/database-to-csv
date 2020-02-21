@@ -5,11 +5,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class EncryptUtilTests {
+public class EncryptUtilTest {
     @Test
     public void testEncrypt() throws Exception {
         String encrypted = EncryptUtil.encrypt("/Users/sam/git/java/database-to-csv/src/test/resources/demo.cer", "Are you okay");
         System.out.println(encrypted);
+        new EncryptUtil();
     }
 
     @Test

@@ -20,8 +20,8 @@ import java.util.logging.Logger;
  * App to extract tables from a database to be csv files, store to a folder.
  *
  */
-public class App {
-    private static Logger logger = Logger.getLogger(App.class.getSimpleName());
+public class DatabaseToCsvApp {
+    private static Logger logger = Logger.getLogger(DatabaseToCsvApp.class.getSimpleName());
     private static final int PROCESS_THREADS = 10;
     private static final String APP_ID_FILE = ".database_to_csv_app_id";
     private static final String KEYSTORE_FILE_NAME = "db2csv.jks";
@@ -30,7 +30,7 @@ public class App {
 
     public static void main( String[] args ) throws Exception {
         if (args.length != 1 && args.length != 2) {
-            String path = App.class.getResource(App.class.getSimpleName() + ".class").getFile();
+            String path = DatabaseToCsvApp.class.getResource(DatabaseToCsvApp.class.getSimpleName() + ".class").getFile();
             if (path.startsWith("file:")) {
                 path = path.substring("file:".length(), path.lastIndexOf('!'));
                 logger.info( "Usages:");
@@ -38,7 +38,7 @@ public class App {
                 System.out.println( "     2: java -jar " + path  + " -init <app_id>");
                 System.out.println( "     3: java -jar " + path  + " -encrypt your_password");
             } else {
-                path = App.class.getName();
+                path = DatabaseToCsvApp.class.getName();
                 logger.info( "Usages:");
                 System.out.println( "     1: java " + path  + " config.xslx");
                 System.out.println( "     2: java " + path  + " -init <app_id>");
@@ -53,7 +53,7 @@ public class App {
             }
         } else if (args.length == 2){
             if (args[0].trim().toLowerCase().equals("-encrypt")) {
-                KeystoreAndCert keyInfo = App.getKeystoreAndCert();
+                KeystoreAndCert keyInfo = DatabaseToCsvApp.getKeystoreAndCert();
                 System.out.println("Encrypted as: " + EncryptUtil.encrypt(keyInfo.getCertPath(), args[1].trim()));
             } else if (args[0].trim().toLowerCase().equals("-init")) {
                 initKeystore(args[1].trim());
@@ -141,33 +141,36 @@ public class App {
         }
         folder.mkdir();
 
-        String commonName = IOUtils.readStandardInput("Common Name: ");
-        String organizationUnit = IOUtils.readStandardInput("Organization Unit: ");
-        String organization = IOUtils.readStandardInput("Organization: ");
-        String city = IOUtils.readStandardInput("City: ");
-        String state = IOUtils.readStandardInput("State: ");
-        String country = IOUtils.readStandardInput("Country: ");
-        int keySize = 2048;
-        int validity = 730; // Expire after 2 years, however it can still be used.
-        String alias = ALIAS_NAME;
-        File keyStorePath = new File(folder, KEYSTORE_FILE_NAME);
-        File certPath = new File(folder, CERT_FILENAME);
+        try(IOUtils.Stdin stdin = new IOUtils.Stdin()) {
+            String commonName = stdin.readLine("Common Name: ");
+            String organizationUnit = stdin.readLine("Organization Unit: ");
+            String organization = stdin.readLine("Organization: ");
+            String city = stdin.readLine("City: ");
+            String state = stdin.readLine("State: ");
+            String country = stdin.readLine("Country: ");
 
-        logger.info(commonName);
+            int keySize = 2048;
+            int validity = 730; // Expire after 2 years, however it can still be used.
+            String alias = ALIAS_NAME;
+            File keyStorePath = new File(folder, KEYSTORE_FILE_NAME);
+            File certPath = new File(folder, CERT_FILENAME);
 
-        String password = EncryptUtil.generateKeystore(commonName,
-                organizationUnit,
-                organization,
-                city,
-                state,
-                country,
-                keySize,
-                validity,
-                alias,
-                keyStorePath.getAbsolutePath(),
-                certPath.getAbsolutePath());
-        KeystorePasswordUtil keystorePasswordUtil = new KeystorePasswordUtil(folder);
-        keystorePasswordUtil.saveEncryptedStorePassword(password);
+            logger.info(commonName);
+
+            String password = EncryptUtil.generateKeystore(commonName,
+                    organizationUnit,
+                    organization,
+                    city,
+                    state,
+                    country,
+                    keySize,
+                    validity,
+                    alias,
+                    keyStorePath.getAbsolutePath(),
+                    certPath.getAbsolutePath());
+            KeystorePasswordUtil keystorePasswordUtil = new KeystorePasswordUtil(folder);
+            keystorePasswordUtil.saveEncryptedStorePassword(password);
+        }
     }
 
     /**

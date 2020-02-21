@@ -86,16 +86,19 @@ public class CsvWriter {
                 String columnValue = "";
                 switch (type) {
                     case Types.FLOAT:
-                    case Types.INTEGER:
-                    case Types.DOUBLE:
-                    case Types.BOOLEAN:
                         columnValue = String.valueOf(rs.getFloat(i));
+                        break;
+                    case Types.INTEGER:
+                        columnValue = String.valueOf(rs.getInt(i));
+                        break;
+                    case Types.DOUBLE:
+                        columnValue = String.valueOf(rs.getDouble(i));
+                        break;
+                    case Types.BOOLEAN:
+                        columnValue = String.valueOf(rs.getBoolean(i));
                         break;
                     case Types.DECIMAL:
                         columnValue = rs.getBigDecimal(i).toPlainString();
-                        break;
-                    case Types.CHAR:
-                        columnValue = rs.getString(i);
                         break;
                     case Types.DATE:
                         columnValue = rs.getDate(i).toString();
